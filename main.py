@@ -60,6 +60,52 @@ def create_tray_icon():
     draw.text((size//3, size//5), "P", fill='white')
     return image
 
+# --- AUTO-START CONFIGURATION ---
+import winreg
+
+def is_autostart_enabled():
+    """Check if Pluto is set to auto-start with Windows"""
+    try:
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, 
+                             r"Software\Microsoft\Windows\CurrentVersion\Run", 
+                             0, winreg.KEY_READ)
+        winreg.QueryValueEx(key, "PlutoAssistant")
+        winreg.CloseKey(key)
+        return True
+    except WindowsError:
+        return False
+
+def enable_autostart():
+    """Add Pluto to Windows startup"""
+    try:
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                             r"Software\Microsoft\Windows\CurrentVersion\Run",
+                             0, winreg.KEY_SET_VALUE)
+        script_path = os.path.abspath(__file__)
+        python_path = sys.executable
+        command = f'"{python_path}" "{script_path}"'
+        winreg.SetValueEx(key, "PlutoAssistant", 0, winreg.REG_SZ, command)
+        winreg.CloseKey(key)
+        logger.info("Auto-start enabled")
+        return True
+    except WindowsError as e:
+        logger.error(f"Failed to enable auto-start: {e}")
+        return False
+
+def disable_autostart():
+    """Remove Pluto from Windows startup"""
+    try:
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                             r"Software\Microsoft\Windows\CurrentVersion\Run",
+                             0, winreg.KEY_SET_VALUE)
+        winreg.DeleteValue(key, "PlutoAssistant")
+        winreg.CloseKey(key)
+        logger.info("Auto-start disabled")
+        return True
+    except WindowsError as e:
+        logger.error(f"Failed to disable auto-start: {e}")
+        return False
+
 # --- CONFIGURATION ---
 # Load config from config.json or use defaults
 import json
@@ -291,10 +337,23 @@ def setup_tray():
     def get_sleep_text(item):
         return "Wake Up" if PAUSED else "Sleep"
     
+    def on_autostart_toggle(icon, item):
+        if is_autostart_enabled():
+            disable_autostart()
+            speak("Auto-start disabled")
+        else:
+            enable_autostart()
+            speak("Auto-start enabled")
+    
+    def get_autostart_checked(item):
+        return is_autostart_enabled()
+    
     menu = pystray.Menu(
         pystray.MenuItem("Listen", on_listen),
         pystray.MenuItem("Thanks", on_thanks),
         pystray.MenuItem(get_sleep_text, on_sleep_wake),
+        pystray.Menu.SEPARATOR,
+        pystray.MenuItem("Start with Windows", on_autostart_toggle, checked=get_autostart_checked),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Quit Pluto", on_quit)
     )
