@@ -101,15 +101,14 @@ except ImportError:
 
 # --- HELPER FUNCTIONS ---
 
-def play_sound(sound_type="success"):
-    """5. Sound Effects - Play custom sounds or fallback to beeps"""
-    
+def _play_sound_sync(sound_type):
+    """Internal: Synchronous sound playback"""
     # Try to play custom sound file first
     if PLAYSOUND_AVAILABLE:
         sound_file = os.path.join(SOUNDS_DIR, SOUND_FILES.get(sound_type, ""))
         if os.path.exists(sound_file):
             try:
-                playsound(sound_file, block=False)
+                playsound(sound_file, block=True)
                 return
             except Exception as e:
                 logger.warning(f"Could not play sound file: {e}")
@@ -134,6 +133,11 @@ def play_sound(sound_type="success"):
             winsound.Beep(400, 200)
     except Exception as e:
         logger.warning(f"Could not play sound: {e}")
+
+def play_sound(sound_type="success"):
+    """Play sounds in background thread to avoid blocking voice recognition"""
+    sound_thread = threading.Thread(target=_play_sound_sync, args=(sound_type,), daemon=True)
+    sound_thread.start()
 
 def log_command(command, action):
     """6. Logging - Log all commands with timestamps"""
