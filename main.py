@@ -430,7 +430,20 @@ def listen_command():
                         os.startfile(CHATGPT_PATH) 
                         print(">> Pluto Assistant is Ready/Active!")
                         log_command(command, "open - launched ChatGPT")
-                        time.sleep(5)
+                        time.sleep(3)
+                        # Resize ChatGPT window to small corner
+                        chatgpt_windows = gw.getWindowsWithTitle('ChatGPT')
+                        if chatgpt_windows:
+                            win = chatgpt_windows[0]
+                            # Get screen size
+                            screen_width, screen_height = pyautogui.size()
+                            # Set window size (400x600) and position (bottom-right corner)
+                            win_width, win_height = 400, 600
+                            win.resizeTo(win_width, win_height)
+                            win.moveTo(screen_width - win_width - 10, screen_height - win_height - 50)
+                            win.activate()
+                            logger.info("ChatGPT window resized to corner")
+                        time.sleep(2)
                         pyautogui.click(TARGET_X, 425)
                     except FileNotFoundError:
                         play_sound("error")
