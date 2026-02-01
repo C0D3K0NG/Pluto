@@ -210,12 +210,21 @@ def listen_command():
                 
                 # 1. Wake word: "Open Pluto" (and variants)
                 if match_command(command, "open"):
-                    play_sound("success")
-                    os.startfile(CHATGPT_PATH) 
-                    print(">> Pluto Assistant is Ready/Active!")
-                    log_command(command, "open - launched ChatGPT")
-                    time.sleep(5)
-                    pyautogui.click(TARGET_X, 425)
+                    try:
+                        play_sound("success")
+                        os.startfile(CHATGPT_PATH) 
+                        print(">> Pluto Assistant is Ready/Active!")
+                        log_command(command, "open - launched ChatGPT")
+                        time.sleep(5)
+                        pyautogui.click(TARGET_X, 425)
+                    except FileNotFoundError:
+                        play_sound("error")
+                        logger.error(f"ChatGPT not found at: {CHATGPT_PATH}")
+                        print(">> ERROR: ChatGPT not found! Check CHATGPT_PATH in config.")
+                    except OSError as e:
+                        play_sound("error")
+                        logger.error(f"Failed to launch ChatGPT: {e}")
+                        print(f">> ERROR: Could not launch ChatGPT - {e}")
                   
                 # 2. Click specific coordinates: "Listen Pluto" (and variants)
                 elif match_command(command, "listen"):
