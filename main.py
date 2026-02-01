@@ -34,7 +34,9 @@ def load_config():
             "open": ["open pluto", "start pluto", "launch pluto", "hey pluto"],
             "listen": ["listen pluto", "pluto listen", "record pluto"],
             "thanks": ["thanks pluto", "thank you pluto", "stop pluto", "pluto stop"],
-            "close": ["close pluto", "quit pluto", "exit pluto", "goodbye pluto"]
+            "close": ["close pluto", "quit pluto", "exit pluto", "goodbye pluto"],
+            "sleep": ["sleep pluto", "pause pluto", "pluto sleep"],
+            "wake": ["wake up pluto", "wake pluto", "pluto wake up"]
         },
         "sound_files": {
             "success": "success.wav",
@@ -73,6 +75,9 @@ COMMANDS = CONFIG["commands"]
 CHATGPT_PATH = CONFIG["chatgpt_path"]
 SOUND_FILES = CONFIG["sound_files"]
 HOTKEYS = CONFIG["hotkeys"]
+
+# Pause/Sleep state
+PAUSED = False
 
 # 6. Logging Setup
 LOG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pluto_log.txt")
@@ -238,6 +243,24 @@ def listen_command():
                 
                 # --- COMMAND LOGIC (using configurable commands) ---
                 
+                # Check if paused - only respond to wake and close commands
+                if PAUSED:
+                    if match_command(command, "wake"):
+                        global PAUSED
+                        PAUSED = False
+                        play_sound("ready")
+                        print(">> Pluto is awake and listening!")
+                        log_command(command, "wake - resumed listening")
+                    elif match_command(command, "close"):
+                        print(">> Closing Pluto Application. Goodbye!")
+                        play_sound("goodbye")
+                        log_command(command, "close - application terminated")
+                        close_chatgpt_window()
+                        sys.exit()
+                    else:
+                        print(f">> (Sleeping) Ignoring: '{command}'")
+                    continue
+                
                 # 1. Wake word: "Open Pluto" (and variants)
                 if match_command(command, "open"):
                     try:
@@ -279,6 +302,14 @@ def listen_command():
                     log_command(command, "close - application terminated")
                     close_chatgpt_window()
                     sys.exit()
+
+                # 5. Sleep: "Sleep Pluto" (and variants)
+                elif match_command(command, "sleep"):
+                    global PAUSED
+                    PAUSED = True
+                    play_sound("goodbye")
+                    print(">> Pluto is now sleeping. Say 'Wake up Pluto' to resume.")
+                    log_command(command, "sleep - paused listening")
 
             except sr.UnknownValueError:
                 # Speech was unintelligible
