@@ -88,7 +88,8 @@ def enable_autostart():
                              r"Software\Microsoft\Windows\CurrentVersion\Run",
                              0, winreg.KEY_SET_VALUE)
         script_path = os.path.abspath(__file__)
-        python_path = sys.executable
+        # Use pythonw.exe for silent startup (no console window)
+        python_path = sys.executable.replace('python.exe', 'pythonw.exe')
         command = f'"{python_path}" "{script_path}"'
         winreg.SetValueEx(key, "PlutoAssistant", 0, winreg.REG_SZ, command)
         winreg.CloseKey(key)
