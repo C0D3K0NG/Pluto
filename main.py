@@ -1,14 +1,35 @@
+import sys
+import os
+
+# Suppress stderr to hide external library error messages (ChatGPT, comtypes, etc.)
+import ctypes
+if sys.platform == 'win32':
+    # Redirect stderr to null on Windows
+    sys.stderr = open(os.devnull, 'w')
+
 import speech_recognition as sr
 import pyautogui
 import pygetwindow as gw
-import sys
 import subprocess
-import os
 import time
 import winsound
 import logging
 import threading
 from datetime import datetime
+
+# Color output support
+try:
+    from colorama import init, Fore, Style
+    init(autoreset=True)
+    COLOR_SUCCESS = Fore.GREEN
+    COLOR_ERROR = Fore.RED
+    COLOR_INFO = Fore.CYAN
+    COLOR_WARNING = Fore.YELLOW
+    COLOR_COMMAND = Fore.MAGENTA
+    COLOR_RESET = Style.RESET_ALL
+except ImportError:
+    # Fallback if colorama not installed
+    COLOR_SUCCESS = COLOR_ERROR = COLOR_INFO = COLOR_WARNING = COLOR_COMMAND = COLOR_RESET = ""
 
 # Try to import keyboard library, provide fallback if not installed
 try:
@@ -385,24 +406,26 @@ def listen_command():
     tray_icon = setup_tray()
     
     with sr.Microphone() as source:
-        print("Adjusting for background noise... (Please wait)")
+        print(f"{COLOR_INFO}Adjusting for background noise... (Please wait){COLOR_RESET}")
         r.adjust_for_ambient_noise(source, duration=1)
         play_sound("ready")
-        print("\n--- PLUTO IS LISTENING ---")
+        print(f"\n{COLOR_SUCCESS}╔══════════════════════════════════════╗{COLOR_RESET}")
+        print(f"{COLOR_SUCCESS}║       🎤 PLUTO IS LISTENING 🎤       ║{COLOR_RESET}")
+        print(f"{COLOR_SUCCESS}╚══════════════════════════════════════╝{COLOR_RESET}\n")
         logger.info("Pluto started and ready for commands")
         
         if KEYBOARD_AVAILABLE:
-            print("Hotkeys: Ctrl+Shift+L (Listen) | Ctrl+Shift+T (Thanks) | Ctrl+Shift+Q (Quit)")
+            print(f"{COLOR_INFO}Hotkeys: {COLOR_COMMAND}Ctrl+Shift+L{COLOR_INFO} (Listen) | {COLOR_COMMAND}Ctrl+Shift+T{COLOR_INFO} (Thanks) | {COLOR_COMMAND}Ctrl+Shift+Q{COLOR_INFO} (Quit){COLOR_RESET}")
         
         while True:
             try:
                 # Listen for audio
-                print("Waiting for command...")
+                print(f"{COLOR_INFO}Waiting for command...{COLOR_RESET}")
                 audio = r.listen(source, phrase_time_limit=5)
                 
                 # Convert speech to text
                 command = r.recognize_google(audio).lower()
-                print(f"Heard: '{command}'")
+                print(f"{COLOR_COMMAND}Heard: '{command}'{COLOR_RESET}")
                 
                 # --- COMMAND LOGIC (using configurable commands) ---
                 
@@ -411,16 +434,16 @@ def listen_command():
                     if match_command(command, "wake"):
                         PAUSED = False
                         play_sound("ready")
-                        print(">> Pluto is awake and listening!")
+                        print(f"{COLOR_SUCCESS}>> Pluto is awake and listening!{COLOR_RESET}")
                         log_command(command, "wake - resumed listening")
                     elif match_command(command, "close"):
-                        print(">> Closing Pluto Application. Goodbye!")
+                        print(f"{COLOR_WARNING}>> Closing Pluto Application. Goodbye!{COLOR_RESET}")
                         play_sound("goodbye")
                         log_command(command, "close - application terminated")
                         close_chatgpt_window()
                         sys.exit()
                     else:
-                        print(f">> (Sleeping) Ignoring: '{command}'")
+                        print(f"{COLOR_WARNING}>> (Sleeping) Ignoring: '{command}'{COLOR_RESET}")
                     continue
                 
                 # 1. Wake word: "Open Pluto" (and variants)
@@ -428,7 +451,7 @@ def listen_command():
                     try:
                         play_sound("success")
                         os.startfile(CHATGPT_PATH) 
-                        print(">> Pluto Assistant is Ready/Active!")
+                        print(f"{COLOR_SUCCESS}>> Pluto Assistant is Ready/Active!{COLOR_RESET}")
                         log_command(command, "open - launched ChatGPT")
                         time.sleep(3)
                         # Resize ChatGPT window to small corner
@@ -438,25 +461,25 @@ def listen_command():
                             # Get screen size
                             screen_width, screen_height = pyautogui.size()
                             # Set window size (400x600) and position (bottom-right corner)
-                            win_width, win_height = 400, 600
+                            win_width, win_height = 400, 400
                             win.resizeTo(win_width, win_height)
                             win.moveTo(screen_width - win_width - 10, screen_height - win_height - 50)
                             win.activate()
                             logger.info("ChatGPT window resized to corner")
                         time.sleep(2)
-                        pyautogui.click(TARGET_X, 425)
+                        pyautogui.click(TARGET_X, 1041)
                     except FileNotFoundError:
                         play_sound("error")
                         logger.error(f"ChatGPT not found at: {CHATGPT_PATH}")
-                        print(">> ERROR: ChatGPT not found! Check CHATGPT_PATH in config.")
+                        print(f"{COLOR_ERROR}>> ERROR: ChatGPT not found! Check CHATGPT_PATH in config.{COLOR_RESET}")
                     except OSError as e:
                         play_sound("error")
                         logger.error(f"Failed to launch ChatGPT: {e}")
-                        print(f">> ERROR: Could not launch ChatGPT - {e}")
+                        print(f"{COLOR_ERROR}>> ERROR: Could not launch ChatGPT - {e}{COLOR_RESET}")
                   
                 # 2. Click specific coordinates: "Listen Pluto" (and variants)
                 elif match_command(command, "listen"):
-                    print(f">> Clicking at ({TARGET_X}, {TARGET_Y})...")
+                    print(f"{COLOR_SUCCESS}>> Clicking at ({TARGET_X}, {TARGET_Y})...{COLOR_RESET}")
                     play_sound("listening")
                     focus_chatgpt_window()
                     pyautogui.click(TARGET_X, TARGET_Y)
@@ -464,7 +487,7 @@ def listen_command():
 
                 # 3. Click coordinates again: "Thanks Pluto" (and variants)
                 elif match_command(command, "thanks"):
-                    print(f">> You're welcome! Clicking again at ({TARGET_X}, {TARGET_Y})...")
+                    print(f"{COLOR_SUCCESS}>> You're welcome! Clicking again at ({TARGET_X}, {TARGET_Y})...{COLOR_RESET}")
                     play_sound("success")
                     focus_chatgpt_window()
                     pyautogui.click(TARGET_X, TARGET_Y)
@@ -472,7 +495,7 @@ def listen_command():
 
                 # 4. Shut down: "Close Pluto" (and variants)
                 elif match_command(command, "close"):
-                    print(">> Closing Pluto Application. Goodbye!")
+                    print(f"{COLOR_WARNING}>> Closing Pluto Application. Goodbye!{COLOR_RESET}")
                     play_sound("goodbye")
                     log_command(command, "close - application terminated")
                     close_chatgpt_window()
@@ -482,7 +505,7 @@ def listen_command():
                 elif match_command(command, "sleep"):
                     PAUSED = True
                     play_sound("goodbye")
-                    print(">> Pluto is now sleeping. Say 'Wake up Pluto' to resume.")
+                    print(f"{COLOR_WARNING}>> Pluto is now sleeping. Say 'Wake up Pluto' to resume.{COLOR_RESET}")
                     log_command(command, "sleep - paused listening")
 
             except sr.UnknownValueError:
