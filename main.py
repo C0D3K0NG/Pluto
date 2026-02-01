@@ -367,6 +367,7 @@ def setup_tray():
     return icon
 
 def listen_command():
+    global PAUSED  # Declare global at function start
     # Initialize recognizer
     r = sr.Recognizer()
     
@@ -401,7 +402,6 @@ def listen_command():
                 # Check if paused - only respond to wake and close commands
                 if PAUSED:
                     if match_command(command, "wake"):
-                        global PAUSED
                         PAUSED = False
                         play_sound("ready")
                         print(">> Pluto is awake and listening!")
@@ -460,7 +460,6 @@ def listen_command():
 
                 # 5. Sleep: "Sleep Pluto" (and variants)
                 elif match_command(command, "sleep"):
-                    global PAUSED
                     PAUSED = True
                     play_sound("goodbye")
                     print(">> Pluto is now sleeping. Say 'Wake up Pluto' to resume.")
