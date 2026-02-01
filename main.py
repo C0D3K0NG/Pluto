@@ -49,14 +49,20 @@ except ImportError:
     print("Install with: pip install pystray pillow")
 
 def create_tray_icon():
-    """Create a simple icon for the system tray"""
-    # Create a simple circle icon
+    """Load or create icon for the system tray"""
+    # Try to load custom icon from assets folder
+    icon_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "pluto_icon.png")
+    if os.path.exists(icon_path):
+        try:
+            return Image.open(icon_path)
+        except Exception:
+            pass
+    
+    # Fallback: Create a simple circle icon
     size = 64
     image = Image.new('RGBA', (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
-    # Draw a blue circle with 'P' for Pluto
     draw.ellipse([4, 4, size-4, size-4], fill='#4A90D9', outline='#2E5A8B', width=2)
-    # Add a simple "P" letter
     draw.text((size//3, size//5), "P", fill='white')
     return image
 
