@@ -20,21 +20,59 @@ except ImportError:
     print("Install with: pip install keyboard")
 
 # --- CONFIGURATION ---
-# Replace these with the coordinates you found in Step 2
-TARGET_X = 1845
-TARGET_Y = 405
+# Load config from config.json or use defaults
+import json
 
-# 4. Configurable Commands Dictionary
-# Easily customize your wake words and commands here
-COMMANDS = {
-    "open": ["open pluto", "start pluto", "launch pluto", "hey pluto"],
-    "listen": ["listen pluto", "pluto listen", "record pluto"],
-    "thanks": ["thanks pluto", "thank you pluto", "stop pluto", "pluto stop"],
-    "close": ["close pluto", "quit pluto", "exit pluto", "goodbye pluto"]
-}
+CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
 
-# ChatGPT executable path
-CHATGPT_PATH = r"C:\Program Files\WindowsApps\OpenAI.ChatGPT-Desktop_1.2025.328.0_x64__2p2nqsd0c76g0\app\ChatGPT.exe"
+def load_config():
+    """Load configuration from config.json with fallback defaults"""
+    defaults = {
+        "target_coordinates": {"x": 1845, "y": 405},
+        "chatgpt_path": r"C:\Program Files\WindowsApps\OpenAI.ChatGPT-Desktop_1.2025.328.0_x64__2p2nqsd0c76g0\app\ChatGPT.exe",
+        "commands": {
+            "open": ["open pluto", "start pluto", "launch pluto", "hey pluto"],
+            "listen": ["listen pluto", "pluto listen", "record pluto"],
+            "thanks": ["thanks pluto", "thank you pluto", "stop pluto", "pluto stop"],
+            "close": ["close pluto", "quit pluto", "exit pluto", "goodbye pluto"]
+        },
+        "sound_files": {
+            "success": "success.wav",
+            "error": "error.wav",
+            "ready": "ready.wav",
+            "listening": "listening.wav",
+            "goodbye": "goodbye.wav"
+        },
+        "hotkeys": {
+            "listen": "ctrl+shift+l",
+            "thanks": "ctrl+shift+t",
+            "quit": "ctrl+shift+q"
+        }
+    }
+    
+    try:
+        if os.path.exists(CONFIG_FILE):
+            with open(CONFIG_FILE, 'r') as f:
+                config = json.load(f)
+            # Merge with defaults (in case new fields added)
+            for key in defaults:
+                if key not in config:
+                    config[key] = defaults[key]
+            print("Loaded config from config.json")
+            return config
+    except (json.JSONDecodeError, IOError) as e:
+        print(f"Warning: Could not load config.json - {e}")
+    
+    return defaults
+
+# Load configuration
+CONFIG = load_config()
+TARGET_X = CONFIG["target_coordinates"]["x"]
+TARGET_Y = CONFIG["target_coordinates"]["y"]
+COMMANDS = CONFIG["commands"]
+CHATGPT_PATH = CONFIG["chatgpt_path"]
+SOUND_FILES = CONFIG["sound_files"]
+HOTKEYS = CONFIG["hotkeys"]
 
 # 6. Logging Setup
 LOG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pluto_log.txt")
@@ -51,15 +89,6 @@ logger = logging.getLogger("Pluto")
 # --- SOUND CONFIGURATION ---
 # Path to sounds folder - place your .wav files here
 SOUNDS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sounds")
-
-# Sound file mapping - customize these filenames
-SOUND_FILES = {
-    "success": "success.wav",
-    "error": "error.wav", 
-    "ready": "ready.wav",
-    "listening": "listening.wav",
-    "goodbye": "goodbye.wav"
-}
 
 # Try to import playsound library
 try:
@@ -163,19 +192,16 @@ def execute_quit():
 
 # 7. Hotkey Override Setup
 def setup_hotkeys():
-    """Setup keyboard shortcuts as backup input method"""
+    """Setup keyboard shortcuts as backup input method (configurable via config.json)"""
     if not KEYBOARD_AVAILABLE:
         return
     
     try:
-        # Ctrl+Shift+L = Listen Pluto
-        keyboard.add_hotkey('ctrl+shift+l', execute_listen, suppress=True)
-        # Ctrl+Shift+T = Thanks Pluto  
-        keyboard.add_hotkey('ctrl+shift+t', execute_thanks, suppress=True)
-        # Ctrl+Shift+Q = Quit Pluto
-        keyboard.add_hotkey('ctrl+shift+q', execute_quit, suppress=True)
+        keyboard.add_hotkey(HOTKEYS["listen"], execute_listen, suppress=True)
+        keyboard.add_hotkey(HOTKEYS["thanks"], execute_thanks, suppress=True)
+        keyboard.add_hotkey(HOTKEYS["quit"], execute_quit, suppress=True)
         
-        logger.info("Hotkeys registered: Ctrl+Shift+L (Listen), Ctrl+Shift+T (Thanks), Ctrl+Shift+Q (Quit)")
+        logger.info(f"Hotkeys registered: {HOTKEYS['listen']} (Listen), {HOTKEYS['thanks']} (Thanks), {HOTKEYS['quit']} (Quit)")
     except Exception as e:
         logger.error(f"Failed to setup hotkeys: {e}")
 

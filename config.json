@@ -1,0 +1,25 @@
+{
+    "target_coordinates": {
+        "x": 1845,
+        "y": 405
+    },
+    "chatgpt_path": "C:\\Program Files\\WindowsApps\\OpenAI.ChatGPT-Desktop_1.2025.328.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe",
+    "commands": {
+        "open": ["open pluto", "start pluto", "launch pluto", "hey pluto"],
+        "listen": ["listen pluto", "pluto listen", "record pluto"],
+        "thanks": ["thanks pluto", "thank you pluto", "stop pluto", "pluto stop"],
+        "close": ["close pluto", "quit pluto", "exit pluto", "goodbye pluto"]
+    },
+    "sound_files": {
+        "success": "success.wav",
+        "error": "error.wav",
+        "ready": "ready.wav",
+        "listening": "listening.wav",
+        "goodbye": "goodbye.wav"
+    },
+    "hotkeys": {
+        "listen": "ctrl+shift+l",
+        "thanks": "ctrl+shift+t",
+        "quit": "ctrl+shift+q"
+    }
+}
