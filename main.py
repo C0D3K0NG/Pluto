@@ -127,6 +127,16 @@ def focus_chatgpt_window():
     logger.warning("ChatGPT window not found!")
     return False
 
+def close_chatgpt_window():
+    """Helper to find and close ChatGPT window"""
+    chatgpt_windows = gw.getWindowsWithTitle('ChatGPT')
+    if chatgpt_windows:
+        chatgpt_windows[0].close()
+        logger.info("ChatGPT window closed")
+        return True
+    logger.warning("ChatGPT window not found to close!")
+    return False
+
 def execute_listen():
     """Execute listen command action"""
     print(f">> Clicking at ({TARGET_X}, {TARGET_Y})...")
@@ -148,11 +158,7 @@ def execute_quit():
     print(">> Closing Pluto Application. Goodbye!")
     play_sound("goodbye")
     log_command("hotkey/voice", "close - application terminated")
-    # Close the ChatGPT window
-    chatgpt_windows = gw.getWindowsWithTitle('ChatGPT')
-    if chatgpt_windows:
-        chatgpt_windows[0].close()
-        logger.info("ChatGPT window closed")
+    close_chatgpt_window()
     os._exit(0)
 
 # 7. Hotkey Override Setup
@@ -232,11 +238,7 @@ def listen_command():
                     print(">> Closing Pluto Application. Goodbye!")
                     play_sound("goodbye")
                     log_command(command, "close - application terminated")
-                    # Close the ChatGPT window
-                    chatgpt_windows = gw.getWindowsWithTitle('ChatGPT')
-                    if chatgpt_windows:
-                        chatgpt_windows[0].close()
-                        logger.info("ChatGPT window closed")
+                    close_chatgpt_window()
                     sys.exit()
 
             except sr.UnknownValueError:
