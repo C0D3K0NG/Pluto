@@ -29,35 +29,35 @@ using voice commands, keyboard shortcuts, and a system tray interface.
 
 <table>
   <tr>
-    <td align="center" width="150">
-      <img src="assets/microphone.png" width="50" alt="Voice"><br>
+    <td align="center" width="180" height="140">
+      <img src="assets/microphone.png" height="48" alt="Voice"><br>
       <b>Voice Commands</b><br>
       <sub>Natural speech recognition</sub>
     </td>
-    <td align="center" width="150">
-      <img src="assets/keyboard.png" width="50" alt="Keyboard"><br>
+    <td align="center" width="180" height="140">
+      <img src="assets/keyboard.png" height="48" alt="Keyboard"><br>
       <b>Hotkeys</b><br>
       <sub>Keyboard shortcuts</sub>
     </td>
-    <td align="center" width="150">
-      <img src="assets/speech.png" width="50" alt="Speech"><br>
+    <td align="center" width="180" height="140">
+      <img src="assets/speech.png" height="48" alt="Speech"><br>
       <b>Voice Feedback</b><br>
       <sub>Pluto speaks back</sub>
     </td>
   </tr>
   <tr>
-    <td align="center">
-      <img src="assets/sleep.png" width="50" alt="Sleep"><br>
+    <td align="center" height="140">
+      <img src="assets/sleep.png" height="48" alt="Sleep"><br>
       <b>Sleep Mode</b><br>
       <sub>Pause & resume</sub>
     </td>
-    <td align="center">
-      <img src="assets/settings.png" width="50" alt="Settings"><br>
+    <td align="center" height="140">
+      <img src="assets/settings.png" height="48" alt="Settings"><br>
       <b>Configurable</b><br>
       <sub>Custom settings</sub>
     </td>
-    <td align="center">
-      <img src="assets/rocket.png" width="50" alt="Startup"><br>
+    <td align="center" height="140">
+      <img src="assets/rocket.png" height="48" alt="Startup"><br>
       <b>Auto-Start</b><br>
       <sub>Launch with Windows</sub>
     </td>
