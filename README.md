@@ -1,6 +1,6 @@
 # 🚀 Pluto - Voice-Controlled ChatGPT Assistant
 
-A hands-free voice assistant that controls the ChatGPT desktop app using voice commands and keyboard shortcuts.
+A hands-free voice assistant that controls the ChatGPT desktop app using voice commands, keyboard shortcuts, and system tray.
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
@@ -11,7 +11,11 @@ A hands-free voice assistant that controls the ChatGPT desktop app using voice c
 - 🎤 **Voice Commands** - Control ChatGPT with natural speech
 - ⌨️ **Hotkey Support** - Keyboard shortcuts as backup
 - 🔊 **Sound Feedback** - Audio cues for all actions
-- ⚙️ **Configurable** - Customize commands, hotkeys via `config.json`
+- 🗣️ **Voice Confirmation** - Pluto speaks back to you
+- 😴 **Sleep/Wake Mode** - Pause and resume listening
+- 🖥️ **System Tray** - Minimize to tray with quick menu
+- 🚀 **Auto-Start** - Start with Windows (optional)
+- ⚙️ **Configurable** - Customize via `config.json`
 - 📝 **Logging** - All commands saved to `pluto_log.txt`
 
 ## 📋 Voice Commands
@@ -21,6 +25,8 @@ A hands-free voice assistant that controls the ChatGPT desktop app using voice c
 | "Open Pluto" / "Hey Pluto" | Launch ChatGPT app |
 | "Listen Pluto" | Start voice recording in ChatGPT |
 | "Thanks Pluto" / "Stop Pluto" | Stop recording |
+| "Sleep Pluto" / "Pause Pluto" | Pause listening |
+| "Wake up Pluto" | Resume listening |
 | "Close Pluto" / "Goodbye Pluto" | Exit Pluto & close ChatGPT |
 
 ## ⌨️ Keyboard Shortcuts
@@ -30,6 +36,15 @@ A hands-free voice assistant that controls the ChatGPT desktop app using voice c
 | `Ctrl+Shift+L` | Start ChatGPT voice recording |
 | `Ctrl+Shift+T` | Stop recording |
 | `Ctrl+Shift+Q` | Quit Pluto |
+
+## 🖥️ System Tray Menu
+
+Right-click the tray icon for quick access:
+- **Listen** - Start voice recording
+- **Thanks** - Stop recording  
+- **Sleep/Wake** - Toggle pause mode
+- **Start with Windows** - Enable/disable auto-start
+- **Quit Pluto** - Exit application
 
 ## 🛠️ Installation
 
@@ -45,11 +60,7 @@ A hands-free voice assistant that controls the ChatGPT desktop app using voice c
    ```
 
 3. **Configure** (optional)
-   - Edit `config.json` to customize:
-     - Click coordinates for your screen
-     - ChatGPT executable path
-     - Voice command phrases
-     - Keyboard hotkeys
+   - Edit `config.json` to customize settings
 
 4. **Run**
    ```bash
@@ -68,6 +79,8 @@ Edit `config.json` to customize:
         "open": ["open pluto", "hey pluto"],
         "listen": ["listen pluto"],
         "thanks": ["thanks pluto", "stop pluto"],
+        "sleep": ["sleep pluto", "pause pluto"],
+        "wake": ["wake up pluto", "wake pluto"],
         "close": ["close pluto", "goodbye pluto"]
     },
     "hotkeys": {
