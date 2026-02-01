@@ -19,6 +19,25 @@ except ImportError:
     print("Note: 'keyboard' library not installed. Hotkey support disabled.")
     print("Install with: pip install keyboard")
 
+# Try to import text-to-speech library
+try:
+    import pyttsx3
+    TTS_ENGINE = pyttsx3.init()
+    TTS_ENGINE.setProperty('rate', 175)  # Speed of speech
+    TTS_AVAILABLE = True
+except ImportError:
+    TTS_AVAILABLE = False
+    print("Note: 'pyttsx3' library not installed. Voice feedback disabled.")
+    print("Install with: pip install pyttsx3")
+
+def speak(text):
+    """Speak text using text-to-speech (non-blocking)"""
+    if TTS_AVAILABLE:
+        def _speak():
+            TTS_ENGINE.say(text)
+            TTS_ENGINE.runAndWait()
+        threading.Thread(target=_speak, daemon=True).start()
+
 # --- CONFIGURATION ---
 # Load config from config.json or use defaults
 import json
@@ -178,6 +197,7 @@ def close_chatgpt_window():
 def execute_listen():
     """Execute listen command action"""
     print(f">> Clicking at ({TARGET_X}, {TARGET_Y})...")
+    speak("Listening")
     play_sound("listening")
     focus_chatgpt_window()
     pyautogui.click(TARGET_X, TARGET_Y)
@@ -186,6 +206,7 @@ def execute_listen():
 def execute_thanks():
     """Execute thanks command action"""
     print(f">> You're welcome! Clicking again at ({TARGET_X}, {TARGET_Y})...")
+    speak("You're welcome")
     play_sound("success")
     focus_chatgpt_window()
     pyautogui.click(TARGET_X, TARGET_Y)
@@ -194,8 +215,10 @@ def execute_thanks():
 def execute_quit():
     """Execute quit command action"""
     print(">> Closing Pluto Application. Goodbye!")
+    speak("Goodbye")
     play_sound("goodbye")
     log_command("hotkey/voice", "close - application terminated")
+    time.sleep(1)  # Wait for speech to finish
     close_chatgpt_window()
     os._exit(0)
 
