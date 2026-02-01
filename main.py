@@ -55,9 +55,22 @@ def speak(text):
     """Speak text using text-to-speech (non-blocking)"""
     if TTS_AVAILABLE:
         def _speak():
-            TTS_ENGINE.say(text)
-            TTS_ENGINE.runAndWait()
+            try:
+                TTS_ENGINE.say(text)
+                TTS_ENGINE.runAndWait()
+            except Exception:
+                pass
         threading.Thread(target=_speak, daemon=True).start()
+
+# Cleanup TTS engine on exit to prevent errors
+import atexit
+def cleanup_tts():
+    if TTS_AVAILABLE and TTS_ENGINE:
+        try:
+            TTS_ENGINE.stop()
+        except Exception:
+            pass
+atexit.register(cleanup_tts)
 
 # Try to import system tray library
 try:
@@ -450,7 +463,16 @@ def listen_command():
                 if match_command(command, "open"):
                     try:
                         play_sound("success")
-                        os.startfile(CHATGPT_PATH) 
+                        # Launch ChatGPT silently (suppress output)
+                        startupinfo = subprocess.STARTUPINFO()
+                        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                        subprocess.Popen(
+                            CHATGPT_PATH,
+                            startupinfo=startupinfo,
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL,
+                            creationflags=subprocess.CREATE_NO_WINDOW
+                        )
                         print(f"{COLOR_SUCCESS}>> Pluto Assistant is Ready/Active!{COLOR_RESET}")
                         log_command(command, "open - launched ChatGPT")
                         time.sleep(3)
