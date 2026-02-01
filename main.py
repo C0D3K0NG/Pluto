@@ -1,11 +1,23 @@
 import sys
 import os
+import warnings
 
-# Suppress stderr to hide external library error messages (ChatGPT, comtypes, etc.)
-import ctypes
+# Suppress ALL warnings and stderr to hide library error messages
+warnings.filterwarnings("ignore")
+
+# Redirect stderr to null BEFORE importing problematic libraries
 if sys.platform == 'win32':
-    # Redirect stderr to null on Windows
     sys.stderr = open(os.devnull, 'w')
+
+# Override excepthook to suppress "Exception ignored" messages
+_original_excepthook = sys.excepthook
+def _silent_excepthook(exc_type, exc_value, exc_tb):
+    # Silently ignore cleanup errors from pyttsx3/comtypes
+    if 'pyttsx3' in str(exc_tb) or 'comtypes' in str(exc_tb):
+        pass
+    else:
+        _original_excepthook(exc_type, exc_value, exc_tb)
+sys.excepthook = _silent_excepthook
 
 import speech_recognition as sr
 import pyautogui
