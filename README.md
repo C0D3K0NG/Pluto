@@ -4,7 +4,7 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:4A90D9,100:2E5A8B&height=200&section=header&text=Pluto&fontSize=80&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=Voice-Controlled%20ChatGPT%20Assistant&descAlignY=55&descSize=20" width="100%"/>
 
 <!-- Logo -->
-<img src="assets/pluto_video.mp4" width="180" alt="Pluto Logo"/>
+<img src="assets/pluto_video.gif" width="180" alt="Pluto Logo"/>
 
 <br>
 
