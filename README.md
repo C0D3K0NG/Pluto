@@ -1,113 +1,135 @@
-# Pluto
+<div align="center">
 
-**Voice-Controlled ChatGPT Assistant for Windows**
+<!-- Animated Header -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4A90D9,100:2E5A8B&height=200&section=header&text=Pluto&fontSize=80&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=Voice-Controlled%20ChatGPT%20Assistant&descAlignY=55&descSize=20" width="100%"/>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows">
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
-</p>
+<!-- Typing Animation -->
+<a href="https://git.io/typing-svg">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&pause=1000&color=4A90D9&center=true&vCenter=true&random=false&width=600&lines=Control+ChatGPT+with+your+voice;Hands-free+productivity;Built+for+Windows" alt="Typing SVG" />
+</a>
 
-A hands-free voice assistant that controls the ChatGPT desktop application using voice commands, keyboard shortcuts, and a system tray interface.
+<br><br>
+
+<!-- Badges with Animation -->
+<img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+<img src="https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows">
+<img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
+<img src="https://img.shields.io/github/stars/C0D3K0NG/Pluto?style=for-the-badge&color=yellow" alt="Stars">
+
+<br><br>
+
+A hands-free voice assistant that controls the ChatGPT desktop application<br>
+using voice commands, keyboard shortcuts, and a system tray interface.
+
+<br>
 
 ---
 
-## Features
+## ✨ Features
 
 <table>
   <tr>
-    <td align="center" width="80"><img src="assets/microphone.png" width="40" alt="Voice"><br><b>Voice Commands</b></td>
-    <td>Control ChatGPT with natural speech recognition</td>
+    <td align="center" width="150">
+      <img src="assets/microphone.png" width="50" alt="Voice"><br>
+      <b>Voice Commands</b><br>
+      <sub>Natural speech recognition</sub>
+    </td>
+    <td align="center" width="150">
+      <img src="assets/keyboard.png" width="50" alt="Keyboard"><br>
+      <b>Hotkeys</b><br>
+      <sub>Keyboard shortcuts</sub>
+    </td>
+    <td align="center" width="150">
+      <img src="assets/speech.png" width="50" alt="Speech"><br>
+      <b>Voice Feedback</b><br>
+      <sub>Pluto speaks back</sub>
+    </td>
   </tr>
   <tr>
-    <td align="center"><img src="assets/keyboard.png" width="40" alt="Keyboard"><br><b>Hotkeys</b></td>
-    <td>Keyboard shortcuts as backup input method</td>
-  </tr>
-  <tr>
-    <td align="center"><img src="assets/speech.png" width="40" alt="Speech"><br><b>Voice Feedback</b></td>
-    <td>Pluto speaks responses back to you</td>
-  </tr>
-  <tr>
-    <td align="center"><img src="assets/sleep.png" width="40" alt="Sleep"><br><b>Sleep Mode</b></td>
-    <td>Pause and resume voice recognition</td>
-  </tr>
-  <tr>
-    <td align="center"><img src="assets/settings.png" width="40" alt="Settings"><br><b>Configurable</b></td>
-    <td>Customize commands and settings via config.json</td>
-  </tr>
-  <tr>
-    <td align="center"><img src="assets/rocket.png" width="40" alt="Startup"><br><b>Auto-Start</b></td>
-    <td>Optional launch with Windows startup</td>
+    <td align="center">
+      <img src="assets/sleep.png" width="50" alt="Sleep"><br>
+      <b>Sleep Mode</b><br>
+      <sub>Pause & resume</sub>
+    </td>
+    <td align="center">
+      <img src="assets/settings.png" width="50" alt="Settings"><br>
+      <b>Configurable</b><br>
+      <sub>Custom settings</sub>
+    </td>
+    <td align="center">
+      <img src="assets/rocket.png" width="50" alt="Startup"><br>
+      <b>Auto-Start</b><br>
+      <sub>Launch with Windows</sub>
+    </td>
   </tr>
 </table>
 
+<br>
+
 ---
 
-## Voice Commands
+## 🎤 Voice Commands
 
 | Command | Action |
-|---------|--------|
-| "Open Pluto" / "Hey Pluto" | Launch ChatGPT application |
-| "Listen Pluto" | Start voice recording in ChatGPT |
-| "Thanks Pluto" / "Stop Pluto" | Stop recording |
-| "Sleep Pluto" / "Pause Pluto" | Pause voice recognition |
-| "Wake up Pluto" | Resume voice recognition |
-| "Close Pluto" / "Goodbye Pluto" | Exit Pluto and close ChatGPT |
+|:-------:|:------:|
+| **"Open Pluto"** / **"Hey Pluto"** | Launch ChatGPT |
+| **"Listen Pluto"** | Start recording |
+| **"Thanks Pluto"** / **"Stop Pluto"** | Stop recording |
+| **"Sleep Pluto"** | Pause listening |
+| **"Wake up Pluto"** | Resume listening |
+| **"Close Pluto"** / **"Goodbye Pluto"** | Exit Pluto |
+
+<br>
 
 ---
 
-## Keyboard Shortcuts
+## ⌨️ Keyboard Shortcuts
 
 | Hotkey | Action |
-|--------|--------|
-| `Ctrl+Shift+L` | Start ChatGPT voice recording |
+|:------:|:------:|
+| `Ctrl+Shift+L` | Start recording |
 | `Ctrl+Shift+T` | Stop recording |
 | `Ctrl+Shift+Q` | Quit Pluto |
 
+<br>
+
 ---
 
-## System Tray
+## 🖥️ System Tray Menu
 
 Right-click the system tray icon for quick access:
 
-- **Listen** — Start voice recording
-- **Thanks** — Stop recording
-- **Sleep / Wake** — Toggle pause mode
-- **Start with Windows** — Enable/disable auto-start
-- **Quit Pluto** — Exit application
+**Listen** → Start recording &nbsp;|&nbsp;
+**Thanks** → Stop recording &nbsp;|&nbsp;
+**Sleep/Wake** → Toggle pause<br>
+**Start with Windows** → Auto-start toggle &nbsp;|&nbsp;
+**Quit** → Exit
+
+<br>
 
 ---
 
-## Installation
-
-### 1. Clone the repository
+## 🚀 Quick Start
 
 ```bash
+# Clone the repository
 git clone https://github.com/C0D3K0NG/Pluto.git
 cd Pluto
-```
 
-### 2. Install dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### 3. Configure (optional)
-
-Edit `config.json` to customize settings for your system.
-
-### 4. Run
-
-```bash
+# Run Pluto
 python main.py
 ```
 
+<br>
+
 ---
 
-## Configuration
+## ⚙️ Configuration
 
-Edit `config.json` to customize:
+Edit `config.json` to customize your setup:
 
 ```json
 {
@@ -117,7 +139,7 @@ Edit `config.json` to customize:
         "open": ["open pluto", "hey pluto"],
         "listen": ["listen pluto"],
         "thanks": ["thanks pluto", "stop pluto"],
-        "sleep": ["sleep pluto", "pause pluto"],
+        "sleep": ["sleep pluto"],
         "wake": ["wake up pluto"],
         "close": ["close pluto", "goodbye pluto"]
     },
@@ -129,42 +151,58 @@ Edit `config.json` to customize:
 }
 ```
 
+<br>
+
 ---
 
-## Custom Sounds
+## 🔊 Custom Sounds
 
 Place `.wav` files in the `sounds/` folder:
 
 | File | Purpose |
-|------|---------|
-| `success.wav` | Command executed successfully |
+|:----:|:-------:|
+| `success.wav` | Command success |
 | `error.wav` | Error occurred |
 | `ready.wav` | Pluto started |
 | `listening.wav` | Recording started |
 | `goodbye.wav` | Pluto closing |
 
+<br>
+
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 Pluto/
 ├── main.py           # Main application
-├── config.json       # Configuration file
-├── requirements.txt  # Python dependencies
-├── assets/           # Icons and images
-├── sounds/           # Custom sound files (optional)
-└── pluto_log.txt     # Command log (auto-generated)
+├── config.json       # Configuration
+├── requirements.txt  # Dependencies
+├── assets/           # Icons
+├── sounds/           # Sound files
+└── pluto_log.txt     # Command log
 ```
 
----
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+<br>
 
 ---
 
-## License
+## 🤝 Contributing
 
-[MIT License](LICENSE) — feel free to use and modify.
+Pull requests welcome!<br>
+For major changes, please open an issue first.
+
+<br>
+
+---
+
+## 📄 License
+
+**MIT License** — feel free to use and modify!
+
+<br>
+
+<!-- Animated Footer -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4A90D9,100:2E5A8B&height=120&section=footer" width="100%"/>
+
+</div>
