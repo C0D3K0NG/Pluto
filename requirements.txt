@@ -10,6 +10,8 @@ PyGetWindow>=0.0.9
 keyboard>=0.13.5      # For hotkey support
 playsound>=1.3.0      # For custom sound files
 pyttsx3>=2.90         # For voice feedback
+pystray>=0.19.4       # For system tray icon
+pillow>=10.0.0        # For tray icon image
 
 # Note: The following are built-in Windows libraries (no install needed):
 # - winsound (Windows system beeps)

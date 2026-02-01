@@ -38,6 +38,28 @@ def speak(text):
             TTS_ENGINE.runAndWait()
         threading.Thread(target=_speak, daemon=True).start()
 
+# Try to import system tray library
+try:
+    import pystray
+    from PIL import Image, ImageDraw
+    TRAY_AVAILABLE = True
+except ImportError:
+    TRAY_AVAILABLE = False
+    print("Note: 'pystray' library not installed. System tray disabled.")
+    print("Install with: pip install pystray pillow")
+
+def create_tray_icon():
+    """Create a simple icon for the system tray"""
+    # Create a simple circle icon
+    size = 64
+    image = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    # Draw a blue circle with 'P' for Pluto
+    draw.ellipse([4, 4, size-4, size-4], fill='#4A90D9', outline='#2E5A8B', width=2)
+    # Add a simple "P" letter
+    draw.text((size//3, size//5), "P", fill='white')
+    return image
+
 # --- CONFIGURATION ---
 # Load config from config.json or use defaults
 import json
@@ -237,12 +259,63 @@ def setup_hotkeys():
     except Exception as e:
         logger.error(f"Failed to setup hotkeys: {e}")
 
+# System tray icon setup
+def setup_tray():
+    """Setup system tray icon with menu"""
+    if not TRAY_AVAILABLE:
+        return None
+    
+    def on_listen(icon, item):
+        execute_listen()
+    
+    def on_thanks(icon, item):
+        execute_thanks()
+    
+    def on_sleep_wake(icon, item):
+        global PAUSED
+        if PAUSED:
+            PAUSED = False
+            play_sound("ready")
+            speak("Pluto is awake")
+            logger.info("Woke up via tray menu")
+        else:
+            PAUSED = True
+            play_sound("goodbye")
+            speak("Going to sleep")
+            logger.info("Paused via tray menu")
+    
+    def on_quit(icon, item):
+        icon.stop()
+        execute_quit()
+    
+    def get_sleep_text(item):
+        return "Wake Up" if PAUSED else "Sleep"
+    
+    menu = pystray.Menu(
+        pystray.MenuItem("Listen", on_listen),
+        pystray.MenuItem("Thanks", on_thanks),
+        pystray.MenuItem(get_sleep_text, on_sleep_wake),
+        pystray.Menu.SEPARATOR,
+        pystray.MenuItem("Quit Pluto", on_quit)
+    )
+    
+    icon = pystray.Icon("Pluto", create_tray_icon(), "Pluto Voice Assistant", menu)
+    
+    # Run tray icon in background thread
+    tray_thread = threading.Thread(target=icon.run, daemon=True)
+    tray_thread.start()
+    logger.info("System tray icon started")
+    return icon
+
 def listen_command():
     # Initialize recognizer
     r = sr.Recognizer()
     
     # Setup hotkeys in background
     setup_hotkeys()
+    
+    # Setup system tray icon
+    tray_icon = setup_tray()
     
     with sr.Microphone() as source:
         print("Adjusting for background noise... (Please wait)")
